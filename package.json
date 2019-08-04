@@ -5,6 +5,7 @@
 	"main": "main.js",
 	"dependencies": {
 		"apify": "^0.15.2",
+		"parse-address": "^1.1.2",
 		"util": "^0.11.1"
 	},
 	"devDependencies": {},

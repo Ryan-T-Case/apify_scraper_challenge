@@ -1,19 +1,20 @@
 const Apify = require('apify');
 const util = require('util');
+const parser = require('parse-address');
 
 
 Apify.main(async () => {
 
     // Get queue and enqueue first url.
     const requestQueue = await Apify.openRequestQueue();
-    await requestQueue.addRequest(new Apify.Request({ url: 'https://news.ycombinator.com/' }));
+    await requestQueue.addRequest(new Apify.Request({ url: 'https://www.visithoustontexas.com/event/zumba-in-the-plaza/59011/' }));
 
     // Create crawler.
     const crawler = new Apify.PuppeteerCrawler({
         requestQueue,
 
         // This page is executed for each request.
-        // If request failes then it's retried 3 times.
+        // If request fails then it's retried 3 times.
         // Parameter page is Puppeteers page object with loaded page.
         handlePageFunction: getEventData,
 
@@ -32,15 +33,45 @@ Apify.main(async () => {
 
 const getEventData = async ({ page, request }) => {
 
-    // Function to get data from page
-    const title = await page.title();
-    const posts = await page.$$('.athing');
+    //Handling parsing of address string
+    let address = await page.$eval('.adrs', element => element.textContent);
+    let parsed = parser.parseLocation(address);
 
-    console.log(`Page ${request.url} succeeded and it has ${posts.length} posts.`);
+    //Function so that prefix is only included in address when it is defined
+    const handleStreetAddress = () => {
+        if (parsed.prefix === undefined) {
+            const streetAddress = (parsed.number + " " + parsed.street + " " + parsed.type);
+            return streetAddress;
+        } else {
+            const streetAddress = (parsed.number + " " + parsed.prefix + " " + parsed.street + " " + parsed.type);
+            return streetAddress;
+        }
+    }
 
+    // Populate extracted data from page into an event object
+    let event = {
+        url: await page.$eval('*[data-seo-website]', element => element.href),
+        name: await page.$eval('h1', element => element.innerText),
+        description: await page.$eval('div.description > p', element => element.innerText),
+        date: await page.$eval('div.dates:first-of-type', element => element.innerText),
+        time: await page.$eval('.detail-c2.left > div:nth-child(8)', element => element.lastChild.textContent),
+        recurring: await page.$eval('div.dates:nth-of-type(2)', element => element.innerText),
+        place: {
+            street: handleStreetAddress(),
+            city: parsed.city,
+            state: parsed.state,
+            postal: parsed.zip
+        },
+        details: {
+            contact: await page.$eval('.detail-c2.left > div:nth-child(6)', element => element.lastChild.textContent),
+            phone: await page.$eval('.detail-c2.left > div:nth-child(7)', element => element.lastChild.textContent),
+            admission: await page.$eval('.detail-c2.left > div:nth-child(9)', element => element.lastChild.textContent),
+        },
+        timestamp: Date.now(),
+    }
 
     // Log data (util is a tool that nicely formats objects in the console)
-    console.log(util.inspect(title, false, null));
+    console.log(util.inspect(event, false, null));
 }
 
 
