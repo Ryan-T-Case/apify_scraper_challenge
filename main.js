@@ -40,7 +40,6 @@ Apify.main(async () => {
                     page,
                     requestQueue,
                     selector: '.item-int > .info > .title > a',
-                    baseUrl: request.loadedUrl,
                     transformRequestFunction: req => {
                         req.userData.eventDetailsPage = true;
                         return req;
@@ -75,7 +74,7 @@ Apify.main(async () => {
                     time: await page.$eval('.detail-c2.left > div:nth-child(8)', element => element.lastChild.textContent), //selector error on some events
                     recurring: await page.$eval('div.dates:nth-of-type(2)', element => element.innerText), //selector error on some events
                     place: {
-                        street: handleStreetAddress(), //Function currently not accounting for when the event is missing address data
+                        street: handleStreetAddress(), //Function currently not accounting for when the event is missing street address data
                         city: parsed.city, //If value is missing, it currently returns undefined
                         state: parsed.state, //If value is missing, it currently returns undefined
                         postal: parsed.zip //If value is missing, it currently returns undefined
