@@ -46,9 +46,5 @@ As the scraper paginates through each events page, and before it enqueues each e
 I was unable to get to this goal in the challenge.
 
 
-## Special Thanks
-
-I would like to thank [OccasionGenius](https://occasiongenius.com/) for the opportunity to attempt this challenge. I learned a lot from this experience, and look forward to learning more about web crawling and scraping with Apify SDK and the best practices behind it. I am particularly curious about how to best implement XPath selectors with the Puppeteer Crawler.
-
 
 
