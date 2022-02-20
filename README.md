@@ -2,8 +2,6 @@
 
 By [Ryan Case](https://www.linkedin.com/in/ryan-t-case/)
 
-[Check out my Portfolio](https://ryan-t-case.github.io/)
-
 ## Instructions
 
 1. Navigate to [repo](https://github.com/Ryan-T-Case/apify_scraper_challenge)
