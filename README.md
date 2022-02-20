@@ -39,10 +39,6 @@ I used a requestList to paginate through each of the events pages and grab links
 
 As the scraper paginates through each events page, and before it enqueues each event link to the requestQueue, I used transformRequestFunction to update each Request's userData with a property of eventDetailsPage and a value of true. This is to ensure that when the scraper starts processing the requestQueue, each request will be handled with the logic that scrapes event data from each page. It also ensures that the scraper only attempts to enqueue links from the events pages and not the event detail pages. When I run the scraper, not all pages scrape successfully. The first time I ran the scraper, 57 out of 107 of the pages succeeded, meaning 50 of them failed. I found that this was due to my selectors not being generalizeable enough across each event detail page, particularly with my nth-of-child and nth-of-type selectors. With some elements being missing on one page and present on another, I can see how this caused an issue. I looked into using XPaths for a more generalizeable selector, but was unsuccessful within the time frame of this challenge, and submitted as-is.
 
-#### 4. Utilize the node library moment.js to parse the date that is grabbed in the getEventData function of part 1.
-
-I was unable to get to this goal in the challenge.
-
 
 
 
